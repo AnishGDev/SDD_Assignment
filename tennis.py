@@ -6,7 +6,6 @@ Points ---> Games ----> Sets
 # Tennis Version 2
 # Player 1 Information. 
 from tkinter import *
-from tkinter.ttk import *
 p1Name = ""
 p1Points = 0
 p1Games = 0
@@ -128,26 +127,28 @@ def printStats():
    print(str(p2Sets) + ":" + str(p2Games) + ":" + str(p2Points) + ": " + p2Name)
 
 def on_enter(e):
-    newGameButton.configure(bg='green')
+    newGameButton.configure(bg='black')
+    newGameButton.configure(fg='#FOC130')
     print("WHY AREN'T YOU WORKING ")
 
 def on_leave(e):
-    newGameButton.configure(bg='SystemButtonFace')
+    newGameButton.configure(bg='#F0C130')
 
-root = Tk()
-root.geometry("500x500")
-root.title("Tennis program")
-titleLabel = Label(root, text="Tennis", width=6, font=("bold", 20), anchor='n')
-titleLabel.pack(pady=20)
-newGameButton = Button(root, text="New Game", style="green/black.TLabel",width=8, bg='red', highlightbackground='white', activebackground='green',activeforeground='yellow',font=("bold", 20), anchor = 'c')
-newGameButton.bind("<Enter>", on_enter)
-newGameButton.bind("<Leave>", on_leave)
-newGameButton.pack(pady=20)
-#newGameButton.grid()
-cmd = input(" DWQD")
-if (int(cmd) == 1):
-   newGameButton.configure(bg="red")
-root.mainloop()
+def startWindow():
+   root = Tk()
+   root.geometry("500x500")
+   root.title("Tennis program")
+   root.configure(bg='#F08130')
+   titleLabel = Label(root, text="Tennis", width=6, font=("MS Sans Serif", 20, "bold"),bg='#F0A130', anchor='n')
+   titleLabel.pack(pady=20)
+   newGameButton = Button(root, text="New Game",width=8, highlightbackground='#699A33',font=("bold", 20), anchor = 'c')
+   newGameButton.bind("<Enter>", on_enter)
+   newGameButton.bind("<Leave>", on_leave)
+   newGameButton.pack(pady=60)
+   #newGameButton.grid()
+   root.mainloop()
+
+startWindow()
 
 '''
 while(True):
