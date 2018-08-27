@@ -28,7 +28,6 @@ MIN_PAD = height/4
 root = tk.Tk()
 root.title("Tennis Program")
 root.geometry(str(height)+"x"+str(width))
-
 scoreP1 = tk.StringVar()
 scoreP2 = tk.StringVar()
 def newGame():
@@ -206,6 +205,7 @@ def on_leave(e):
     newGameButton.configure(bg='#F0C130')
 
 #root.configure(bg='#F08130')
+root.configure(background="#ffda79")
 class App():
    newGameButton = None
    # Frames that are going to be overlayed on top of the window
@@ -229,11 +229,12 @@ class App():
       # unpack other frames
       self.startgame.pack_forget()
       # pack start window
+      self.startwindow.configure(background="#ffda79")
       self.startwindow.pack()
       # Label all widgets and grid them
-      titleLabel = tk.Label(self.startwindow, text="Tennis", width=6, font=("MS Sans Serif", 20, "bold"),bg='#F0A130', anchor='n')
+      titleLabel = tk.Label(self.startwindow, text="Tennis", width=6, font=("MS Sans Serif", 20, "bold"),bg='#ffda79', fg='#383a39', anchor='n')
       titleLabel.grid(row=0, column=0)
-      newGameButton = tk.Button(self.startwindow, text="New Game", width=8, font=("bold", 20), anchor = 'c', command=self.start_game)
+      newGameButton = tk.Button(self.startwindow, text="New Game", width=10, font=("bold", 20), bg="#3ae374",anchor = 'c', command=self.start_game)
       newGameButton.grid(row=2, column=0, pady=MIN_PAD)
       newGameButton.bind("<Enter>", self.on_enter)
       newGameButton.bind("<Leave>", self.on_leave)
@@ -241,20 +242,23 @@ class App():
    def start_game(self):
       # unpack any other frames
       self.startwindow.pack_forget()
+      self.startgame.configure(background="#2980b9")
       # pack start game window
       #self.startgame = tk.Frame(root)
       # Assign all widgets and grid them
-      titleLabel = tk.Label(self.startgame, text="Setup the game", font=("MS Sans Serif", 20, "bold"),bg='#F0A130', anchor='n')
+      titleLabel = tk.Label(self.startgame, text="Setup the game", font=("Comic Sans MS", 20, "bold"),bg='#F0A130', anchor='n')
       titleLabel.grid(row=0, columnspan=1)
-      name1Label = tk.Label(self.startgame, text= "Player 1: ", font=("MS Sans Serif", 20, "bold"))
-      name2Label = tk.Label(self.startgame, text= "Player 2: ", font=("MS Sans Serif", 20, "bold"))
+      name1Label = tk.Label(self.startgame, text= "Player 1: ", font=("Comic Sans MS", 20, "bold"), bg="#2980b9", fg="#FFFFFF")
+      name2Label = tk.Label(self.startgame, text= "Player 2: ", font=("Comic Sans MS", 20, "bold"),  bg="#2980b9", fg="#FFFFFF")
+      emptyLabel = tk.Label(self.startgame, width=3,  bg="#2980b9")
+      emptyLabel.grid(row=1, column=2)
       name1Label.grid(row=1, column=0)
       name2Label.grid(row=2, column=0)
       nameEntry1 = tk.Entry(self.startgame, textvariable=self.name1)
       nameEntry2 = tk.Entry(self.startgame, textvariable=self.name2)
       nameEntry1.grid(row=1, column=1, pady = MIN_PAD/2)
       nameEntry2.grid(row=2, column=1, pady = MIN_PAD/2)
-      startGameButton = tk.Button(self.startgame, text="Start", width=8, font=("bold", 20), anchor = 'c', command=self.background_setup)
+      startGameButton = tk.Button(self.startgame, text="Start", width=8, font=("bold", 20), anchor = 'c', bg="#3498db",  fg="#FFFFFF", command=self.background_setup)
       startGameButton.grid(row=3, columnspan=1)
       self.startgame.pack()
 
@@ -280,12 +284,12 @@ class App():
       titleLabel = tk.Label(self.maingame, text="Game", font=("MS Sans Serif", 20, "bold"),bg='#F0A130', anchor='n')
 
       titleLabel.grid(row=0, column=0)
-      setsLabelP1 = tk.Label(self.maingame, textvariable=scoreP1, font=("MS Sans Serif", 20, "bold"))
+      setsLabelP1 = tk.Label(self.maingame, textvariable=scoreP1, font=("Comic Sans MS", 20, "bold"))
       setsLabelP1.grid(row=1, column=0)
-      setsLabelP2 = tk.Label(self.maingame, textvariable=scoreP2, font=("MS Sans Serif", 20, "bold"))
+      setsLabelP2 = tk.Label(self.maingame, textvariable=scoreP2, font=("Comic Sans MS", 20, "bold"))
       setsLabelP2.grid(row=1, column=1)
 
-      scoreLabelP1 = tk.Button(self.maingame, text="Player 1's point", width=10, font=("bold", 20), anchor = 'c', command=lambda : self.update_stats(1))
+      scoreLabelP1 = tk.Button(self.maingame, text="Player 1's point", font=("bold", 20), anchor = 'c', command=lambda : self.update_stats(1))
       scoreLabelP1.grid(row=2, column=0)
       scoreLabelP2 = tk.Button(self.maingame, text="Player 2's point", font=("bold", 20), anchor = 'c', command=lambda : self.update_stats(2))
       scoreLabelP2.grid(row=2, column=1, padx=10)
