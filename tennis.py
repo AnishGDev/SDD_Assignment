@@ -66,7 +66,8 @@ def newGame():
       'p1Sets': 0,
       'p2Points': 0,
       'p2Games': 0,
-      'p2Sets': 0
+      'p2Sets': 0,
+      'gameWinner': -1
       })
 # Add points based on playerID. 1 = Player 1 and 2 = Player 2
 
@@ -174,8 +175,13 @@ def updateGame():
       # Reset points
       p1Points = 0
       p2Points = 0
-      if (p1Sets == maxSet):
-         #Game over. Player one wins.
+      if (maxSet == 1 and p1Sets == maxSet):
+         gameWinner = 1 
+      elif (maxSet == 3 and p1Sets == 2):
+         gameWinner = 1
+      elif (maxSet == 5 and p1Sets == 3):
+         gameWinner = 1
+      elif (p1Sets == maxSet):
          gameWinner = 1
    elif (p1Games == 6 and p2Games == 6):
       print("whoa 2")
@@ -205,11 +211,15 @@ def updateGame():
       # Reset points
       p1Points = 0
       p2Points = 0
-      print("EARNED A SET")
-      if (p2Sets == maxSet):
-         print("Won the game")
-         # Game Over. Player Two wins.
-         gameWinner = 2
+
+      if (maxSet == 1 and p2Sets == maxSet):
+         gameWinner = 1 
+      elif (maxSet == 3 and p2Sets == 2):
+         gameWinner = 1
+      elif (maxSet == 5 and p2Sets == 3):
+         gameWinner = 1
+      elif (p2Sets == maxSet):
+         gameWinner = 1
    var1 = str(p1Points)
    var2 = str(p2Points)
    if (var1 == '-1'):
@@ -277,6 +287,7 @@ class App():
    startgame = tk.Frame(root)
    maingame = tk.Frame(root)
    winnerscreen = tk.Frame(root)
+   helpscreen = tk.Frame(root)
    # Temporary variables to hold names for GUI.
    name1 = tk.StringVar()
    name2 = tk.StringVar()
@@ -300,17 +311,19 @@ class App():
       # unpack other frames
       self.startgame.pack_forget()
       self.maingame.pack_forget()
+      self.winnerscreen.pack_forget()
+      self.helpscreen.pack_forget()
       # pack start window
       self.startwindow.configure(background="#ececec")
       self.startwindow.pack()
       # Label all widgets and grid them
       titleLabel = tk.Label(self.startwindow, text="Tennis", width=6, font=("Verdana Regular", 36, "bold"), bg='#ececec', fg='#76838e', anchor='n')
       titleLabel.grid(row=0, column=0)
-      newGameButton = tk.Button(self.startwindow, fg="red",text="New Game",font=("bold", 20 ), anchor = 'c', image=blueButton, compound=tk.CENTER,relief="flat", highlightthickness = 0, borderwidth = 0,command=self.start_game)
+      newGameButton = tk.Button(self.startwindow, fg="white",text="New Game",font=("bold", 20 ), anchor = 'c', image=blueButton, compound=tk.CENTER,relief="flat", highlightthickness = 0, borderwidth = 0,command=self.start_game)
       #newGameButton.config(image=blueButton)
       newGameButton.grid(row=2, column=0, pady=50)
 
-      helpButton = tk.Button(self.startwindow, text="Help", font=("Verdana", 20), anchor = 'c', image=greyButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0)
+      helpButton = tk.Button(self.startwindow, text="Help", font=("Verdana", 20), anchor = 'c', image=greyButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=self.helpScreen)
       helpButton.grid(row=3, column=0, pady=0)
 
       quitButton = tk.Button(self.startwindow, text="Quit", font=("Verdana", 20), anchor = 'c', image=redButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=root.destroy)
@@ -322,6 +335,16 @@ class App():
       quitButton.bind("<Enter>", lambda e: quitButton.configure(image=redButtonDown))
       quitButton.bind("<Leave>", lambda e: quitButton.configure(image=redButton))
 
+   def limitTheSize1(self, *args):
+      value=self.name1.get()
+      if (len(value) > 10):
+         self.name1.set(value[:10])
+
+   def limitTheSize2(self, *args):
+      value=self.name2.get()
+      if (len(value) > 10):
+         self.name2.set(value[:10])
+
    def start_game(self):
       # unpack any other frames
       self.startwindow.pack_forget()
@@ -331,6 +354,8 @@ class App():
       titleLabel.grid(row=0, columnspan=3, pady=20)
       name1Label = tk.Label(self.startgame, text="Player1", font=("Verdana", 30), bg='#ececec', fg='#76838e', anchor='c')
       name2Label = tk.Label(self.startgame, text="Player2", font=("Verdana", 30), bg='#ececec', fg='#76838e', anchor='c')
+      self.name1.trace('w', self.limitTheSize1)
+      self.name2.trace('w', self.limitTheSize2)
       nameEntry1 = tk.Entry(self.startgame, textvariable=self.name1)
       nameEntry2 = tk.Entry(self.startgame, textvariable=self.name2)
 
@@ -338,6 +363,7 @@ class App():
       name2Label.grid(row=2, column=0, pady=20)
       nameEntry1.grid(row=1, column=1)
       nameEntry2.grid(row=2, column=1)
+
       serving1= tk.Radiobutton(self.startgame, text="Serving?", font=("Verdana", 15), bg='#ececec', variable=self.var, value=1)
       serving2 = tk.Radiobutton(self.startgame, text="Serving?", font=("Verdana", 15), bg='#ececec', variable=self.var, value=2)
       serving1.grid(row=1, column=2, padx=10)
@@ -352,6 +378,7 @@ class App():
       setsNum5Label.grid(row=5, column=1)
       startGameButton = tk.Button(self.startgame, text="Start", font=("bold", 20), anchor = 'c', bg="#ececec",  fg="#FFFFFF", image=blueButton, compound=tk.CENTER, command=self.background_setup)
       startGameButton.grid(row=6, column=1)
+
       '''
       # pack start game window
       #self.startgame = tk.Frame(root)
@@ -377,19 +404,18 @@ class App():
       global currServer, maxSet
       p1Name=self.name1.get()
       p2Name=self.name2.get()
-      ending1.set(str(p1Name) + "'s point")
-      ending2.set(str(p2Name) + "'s point")
       newGame()
       if (self.var==1):
          currServer = 0
       else:
          currServer = 1
-
-      if (self.setsVar == 1):
+      print("SELF.SETSVAR IS " + str(self.setsVar.get()))
+      currValueSet = self.setsVar.get()
+      if (currValueSet == 1):
          maxSet = 1
-      elif (self.setsVar == 2):
+      elif (currValueSet == 2):
          maxSet = 3
-      elif (self.setsVar == 3):
+      elif (currValueSet == 3):
          maxSet = 5
       updateGame()
       self.main_game()
@@ -427,7 +453,6 @@ class App():
          elif(gameState == 1):
             tiebreakAddPoints(playerID)
       updateGame()
-
       if (currServer == 0):
          currServerStringVar.set(self.name1.get())
          #print("Server is " + self.name1.get())
@@ -496,12 +521,12 @@ class App():
       currentServerTextLabel = tk.Label(self.maingame, text="Current Server:", font=("Verdana", 20), bg="#ececec", fg='#76838e')
       serverPlayerLabel = tk.Label(self.maingame, width=10, textvariable=currServerStringVar, font=("Verdana", 20), bg="#ececec")
 
-      currentServerTextLabel.grid(row=4, column=0)
+      currentServerTextLabel.grid(row=4, column=0, pady=10)
       serverPlayerLabel.grid(row=4, column=1)
 
-      scoreButtonP1 = tk.Button(self.maingame, text="Server's point", font=("Verdana", 20), anchor = 'c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command= lambda: self.update_stats(1))
-      scoreButtonP2 = tk.Button(self.maingame, text="Receiver's point", font=("Verdana", 20), anchor = 'c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=lambda: self.update_stats(2))
-      faultButton = tk.Button(self.maingame, text="Server Fault", font=("Verdana", 20), anchor='c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=lambda: self.update_stats(-1, 0))
+      scoreButtonP1 = tk.Button(self.maingame, text="Server's point", font=("Verdana", 17),anchor = 'c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command= lambda: self.update_stats(1))
+      scoreButtonP2 = tk.Button(self.maingame, text="Receiver's point", font=("Verdana", 17), anchor = 'c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=lambda: self.update_stats(2))
+      faultButton = tk.Button(self.maingame, text="Server Fault", font=("Verdana", 17), anchor='c', image=blueButton, compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=lambda: self.update_stats(-1, 0))
       faultButton.grid(row=7, column=0)
       scoreButtonP1.grid(row=5, column=0)
       scoreButtonP2.grid(row=6, column=0, pady=20)
@@ -541,7 +566,28 @@ class App():
       self.startwindow.pack_forget()
       self.maingame.pack_forget()
       self.winnerscreen.configure(background="#ececec")
-      winnerText = tk.Label(self.winnerscreen)
+      winnerText = tk.Label(self.winnerscreen, text="Game Winner", font=("Verdana", 35),bg="#ececec",fg='#76838e')
+      winnerT = tk.Label(self.winnerscreen, textvariable=self.winner, font=("Verdana", 24),bg="#ececec")
+      backButton = tk.Button(self.winnerscreen, text="Back", font=("Verdana", 20), image=redButton, fg="white", compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=self.start_window)
+      winnerText.grid(row=0, column=0, pady=30)
+      winnerT.grid(row=1, column=0)
+      backButton.grid(row=2, column=0)
+      self.winnerscreen.pack()
+
+   def helpScreen(self):
+      self.startgame.pack_forget()
+      self.startwindow.pack_forget()
+      self.maingame.pack_forget()
+      self.winnerscreen.pack_forget()
+      self.helpscreen.configure(background="#ececec")
+      info = tk.Label(self.helpscreen, text="ENTER TEXT HERE ABOUT USER", wraplength=500, font=("Verdana", 20))
+      helpTitle= tk.Label(self.helpscreen, text="Help", font=("Verdana", 20))
+      backButton = tk.Button(self.helpscreen, text="Back", font=("Verdana", 20), image=redButton, fg="white", compound=tk.CENTER, relief="flat", highlightthickness = 0, borderwidth = 0, command=self.start_window)
+      #home = tk.Button(self.helpscreen, anchor='ne',bg="#ececec",image=homeButton, relief="flat", highlightthickness = 0, borderwidth = 0, command=lambda: self.start_window())
+      helpTitle.grid(row=0, columnspan=2, pady=10)
+      backButton.grid(row=2, columnspan=2)
+      info.grid(row=1, columnspan=2, pady=20)
+      self.helpscreen.pack()
 app = App()
 app.start_window()
 root.mainloop()
